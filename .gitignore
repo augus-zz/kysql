@@ -1,0 +1,7 @@
+*.o
+tmp
+*.swp
+#*
+build/*
+!build/.gitkeep
+Makefile
