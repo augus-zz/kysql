@@ -16,6 +16,6 @@ class DbViewer: public QTreeView {
  protected:
 
  private:
-}
+};
 
 #endif // DB_VIEWER_H

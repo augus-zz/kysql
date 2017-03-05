@@ -1,27 +1,29 @@
 #include "main_window.h"
 
+#include "../application.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    createActions();
-    createMenus();
-    createSidebarDockWindow();
-    createSQLEditorDockWindow();
-    createBottomDockWindow();
+    create_actions();
+    create_menus();
 
-    setMinimumSize(160, 160);
-    resize(480, 320);
+    setMinimumSize(400, 300);
+    resize(900, 600);
+
+    init();
+    create_shortcuts();
 }
 
 MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::createActions()
+void MainWindow::create_actions()
 {
 }
 
-void MainWindow::createMenus()
+void MainWindow::create_menus()
 {
 }
 
@@ -31,11 +33,27 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 }
 #endif // QT_NO_CONTEXTMENU
 
-void MainWindow::createSidebarDockWindow()
+
+void MainWindow::init()
 {
-  QDockWidget *dock = new QDockWidget(tr("sidebar"), this);
-  dock->setAllowedAreas(Qt::LeftDockWidgetArea);
-  QListWidget *customerList = new QListWidget(dock);
+  //QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO).debug("test");
+  // if((qobject_cast<Application *>qApp)->connections.isEmpty())
+  // {
+  //   qDebug() << "connection is empty";
+  //   ConnectionWindow w(this);
+  //   w.show_dialog(NULL);
+  // }
+
+  tab_widget = new QTabWidget();
+  setCentralWidget(tab_widget);
+  logger("create_page");
+  create_page(NULL);
+}
+
+void MainWindow::create_page(Connection *connection)
+{
+  QVBoxLayout *sidebar_layout = new QVBoxLayout;
+  QListWidget *customerList = new QListWidget();
   customerList->addItems(QStringList()
                          << "John Doe, Harmony Enterprises, 12 Lakeside, Ambleton"
                          << "Jane Doe, Memorabilia, 23 Watersedge, Beaton"
@@ -43,28 +61,41 @@ void MainWindow::createSidebarDockWindow()
                          << "Tim Sheen, Caraba Gifts, 48 Ocean Way, Deal"
                          << "Sol Harvey, Chicos Coffee, 53 New Springs, Eccleston"
                          << "Sally Hobart, Tiroli Tea, 67 Long River, Fedula");
-  dock->setWidget(customerList);
-  addDockWidget(Qt::LeftDockWidgetArea, dock);
-}
 
-void MainWindow::createSQLEditorDockWindow()
-{
-  QDockWidget *dock = new QDockWidget(tr("sql_editor"), this);
-  sql_editor = new SQLEditor(dock);
-  dock->setWidget(sql_editor);
-  addDockWidget(Qt::RightDockWidgetArea, dock);
-}
+  sidebar_layout->addWidget(customerList);
+  SQLEditor *sql_editor = new SQLEditor();
 
-void MainWindow::createBottomDockWindow()
-{
-  QDockWidget *dock = new QDockWidget(tr("bottom"), this);
-  QTableView *table_view = new QTableView(this);
+  QTableView *table_view = new QTableView();
   QStandardItemModel *model = new QStandardItemModel();
   model->setColumnCount(2);
   model->setHeaderData(0, Qt::Horizontal, QString::fromLocal8Bit("Card NO"));
   model->setHeaderData(1, Qt::Horizontal, QString::fromLocal8Bit("Name"));
   table_view->setModel(model);
 
-  dock->setWidget(table_view);
-  addDockWidget(Qt::BottomDockWidgetArea, dock);
+  QVBoxLayout *query_layout = new QVBoxLayout;
+  query_layout->addWidget(sql_editor);
+  query_layout->addWidget(table_view);
+
+  QHBoxLayout *h_layout = new QHBoxLayout;
+  h_layout->addLayout(sidebar_layout);
+  h_layout->addLayout(query_layout);
+
+  logger("show");
+
+  QWidget *page = new QWidget();
+  page->setLayout(h_layout);
+  tab_widget->addTab(page, connection == NULL ? "New Connection" : connection->name);
+}
+
+void MainWindow::create_shortcuts()
+{
+  new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(close()));
+  new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_N), this, SLOT(new_connection()));
+}
+
+void MainWindow::new_connection()
+{
+  logger("new connection");
+  ConnectionWindow w(this);
+  w.show_dialog(NULL);
 }

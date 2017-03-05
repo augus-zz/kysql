@@ -1,3 +1,6 @@
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
+
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -9,8 +12,12 @@
 #include <QListWidget>
 #include <QTableView>
 #include <QStandardItemModel>
+#include <QShortcut>
+
+#include "../utils/logger.h"
 
 #include "sql_editor.h"
+#include "connection_window.h"
 
 class MainWindow : public QMainWindow
 {
@@ -28,16 +35,17 @@ class MainWindow : public QMainWindow
   private slots:
 
   private:
-  void createActions();
-  void createMenus();
-  void createSidebarDockWindow();
-  void createSQLEditorDockWindow();
-  void createBottomDockWindow();
+  void create_actions();
+  void create_menus();
+  void create_page(Connection *connection);
+  void init();
+  void create_shortcuts();
+
+  public slots:
+    void new_connection();
 
   private:
-  QDockWidget *sidebar_dock_window;
-  QDockWidget *bottom_dock_window;
-
-  private:
-  SQLEditor *sql_editor;
+  QTabWidget *tab_widget;
 };
+
+#endif // MAIN_WINDOW_H

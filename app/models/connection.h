@@ -3,17 +3,29 @@
 
 #include <QString>
 #include <QSqlDatabase>
+#include <QSqlQuery>
 
 class Connection {
-  private:
+ public:
+  QString name;
   QString host;
   short port;
 
-  QString username
+  QString username;
   QString password;
 
   int keep_alive;
   // QProxy proxy;
-}
 
-#endif # CONNECTION_H
+  QSqlDatabase db;
+ public:
+  Connection();
+  Connection(QString host, short port);
+  ~Connection();
+  bool open();
+  bool close();
+  QSqlQuery *query(QString &query_string);
+  QSqlQuery *new_query();
+};
+
+#endif // CONNECTION_H

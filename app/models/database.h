@@ -11,6 +11,6 @@ class Database {
   QString name;
   QString encoding;
   Table *tables;
-}
+};
 
 #endif // DATABASE_H

@@ -5,11 +5,13 @@
 #include <QSqlField>
 #include <QString>
 
-class Table {
+class Table
+{
+  Q_OBJECT
 
  private:
  QString name,
  QList<Field> field_list;
-}
+};
 
 #endif TABLE_H
