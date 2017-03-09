@@ -47,7 +47,10 @@ void MainWindow::init()
   tab_widget = new QTabWidget();
   setCentralWidget(tab_widget);
   logger("create_page");
-  create_page(NULL);
+
+  Connection *connection = new Connection;
+  (qobject_cast<Application *>qApp)->connections.append(connection);
+  create_page(connection);
 }
 
 void MainWindow::create_page(Connection *connection)
@@ -96,6 +99,22 @@ void MainWindow::create_shortcuts()
 void MainWindow::new_connection()
 {
   logger("new connection");
-  ConnectionWindow w(this);
-  w.show_dialog(NULL);
+  ConnectionWindow *w = new ConnectionWindow(this);
+
+  Connection *connection = new Connection;
+  (qobject_cast<Application *>qApp)->connections.append(connection);
+  logger("append connection");
+  w->init_widget(connection);
+  tab_widget->addTab(w, "New Connection");
+  tab_widget->setCurrentWidget(w);
+ }
+
+void MainWindow::close_page()
+{
+  logger("close window");
+  ConnectionWindow *w = (ConnectionWindow *) tab_widget->currentWidget();
+  (qobject_cast<Application *>qApp)->connections.removeOne(w->connection);
+  delete w->connection;
+
+  tab_widget->removeTab(tab_widget->currentIndex());
 }

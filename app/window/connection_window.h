@@ -1,15 +1,17 @@
 #ifndef CONNECTION_WINDOW_H
 #define CONNECTION_WINDOW_H
 
-#include <QDialog>
-#include <QTextEdit>
+#include <QWidget>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QFormLayout>
 #include <QHBoxLayout>
 
+#include "../utils/logger.h"
+
 #include "../models/connection.h"
 
-class ConnectionWindow : public QDialog {
+class ConnectionWindow : public QWidget {
   Q_OBJECT
 
  public:
@@ -17,19 +19,21 @@ class ConnectionWindow : public QDialog {
   ~ConnectionWindow();
 
  public:
-  void init_dialog();
-  void show_dialog(Connection *connection);
+  void init_widget(Connection *connection);
   void set_connection_properties();
 
  public:
   Connection *connection;
 
+  public slots:
+  void save_connection();
+
  private:
- QTextEdit *txt_connection_name;
- QTextEdit *txt_connection_host;
- QTextEdit *txt_connection_port;
- QTextEdit *txt_connection_username;
- QTextEdit *txt_connection_password;
+ QLineEdit *txt_connection_name;
+ QLineEdit *txt_connection_host;
+ QLineEdit *txt_connection_port;
+ QLineEdit *txt_connection_username;
+ QLineEdit *txt_connection_password;
 };
 
 #endif // CONNECTION_WINDOW_H

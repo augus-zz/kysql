@@ -20,7 +20,7 @@ class Application : public QApplication
   int exec();
 
  public:
-  QList<Connection> connections;
+  QList<Connection*> connections;
 };
 
 #endif // KYSQL_APPLICATOIN_H

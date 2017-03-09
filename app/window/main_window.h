@@ -43,6 +43,7 @@ class MainWindow : public QMainWindow
 
   public slots:
     void new_connection();
+    void close_page();
 
   private:
   QTabWidget *tab_widget;
