@@ -34,3 +34,13 @@ QSqlQuery *Connection::new_query()
 {
   return new QSqlQuery(db);
 }
+
+void Connection::log()
+{
+  logger(QString("<Connection, name: %1, host: %2, port: %3, username: %4, password: %5>")
+         .arg(name)
+         .arg(host)
+         .arg(port)
+         .arg(username)
+         .arg(password).toStdString().c_str());
+}

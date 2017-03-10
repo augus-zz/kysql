@@ -5,14 +5,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    create_actions();
-    create_menus();
-
-    setMinimumSize(400, 300);
-    resize(900, 600);
-
     init();
-    create_shortcuts();
 }
 
 MainWindow::~MainWindow()
@@ -36,25 +29,37 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 void MainWindow::init()
 {
-  //QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO).debug("test");
-  // if((qobject_cast<Application *>qApp)->connections.isEmpty())
-  // {
-  //   qDebug() << "connection is empty";
-  //   ConnectionWindow w(this);
-  //   w.show_dialog(NULL);
-  // }
+  logger("MainWindow.init");
+  setMinimumSize(400, 300);
+  resize(900, 600);
+
+  create_actions();
+
+  create_menus();
+
+  create_shortcuts();
 
   tab_widget = new QTabWidget();
   setCentralWidget(tab_widget);
-  logger("create_page");
 
-  Connection *connection = new Connection;
-  (qobject_cast<Application *>qApp)->connections.append(connection);
-  create_page(connection);
+  if(!(qobject_cast<Application *>qApp)->connections.isEmpty())
+  {
+    for( auto connection :( qobject_cast<Application *>qApp)->connections )
+    {
+      create_page(connection);
+    }
+  }
+  else
+  {
+    Connection *connection = new Connection;
+    (qobject_cast<Application *>qApp)->connections.append(connection);
+    create_page(connection);
+  }
 }
 
 void MainWindow::create_page(Connection *connection)
 {
+  logger("Mainwindow.create_page");
   QVBoxLayout *sidebar_layout = new QVBoxLayout;
   QListWidget *customerList = new QListWidget();
   customerList->addItems(QStringList()
@@ -83,17 +88,16 @@ void MainWindow::create_page(Connection *connection)
   h_layout->addLayout(sidebar_layout);
   h_layout->addLayout(query_layout);
 
-  logger("show");
-
   QWidget *page = new QWidget();
   page->setLayout(h_layout);
-  tab_widget->addTab(page, connection == NULL ? "New Connection" : connection->name);
+  tab_widget->addTab(page, connection == NULL || connection->name.isNull() ? "New Connection" : connection->name);
 }
 
 void MainWindow::create_shortcuts()
 {
   new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(close()));
   new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_N), this, SLOT(new_connection()));
+  new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_W), this, SLOT(close_page()));
 }
 
 void MainWindow::new_connection()
@@ -112,9 +116,37 @@ void MainWindow::new_connection()
 void MainWindow::close_page()
 {
   logger("close window");
+  if(tab_widget->count() == 1)
+  {
+    logger("quit");
+    close();
+    return;
+  }
   ConnectionWindow *w = (ConnectionWindow *) tab_widget->currentWidget();
-  (qobject_cast<Application *>qApp)->connections.removeOne(w->connection);
-  delete w->connection;
+  if(w->connection->name.isNull())
+  {
+    (qobject_cast<Application *>qApp)->connections.removeOne(w->connection);
+    delete w->connection;
+  }
+  w->close();
 
   tab_widget->removeTab(tab_widget->currentIndex());
+}
+
+void MainWindow::save_connection()
+{
+  logger("save_connection");
+  ConnectionWindow *w = (ConnectionWindow *) tab_widget->currentWidget();
+  w->connection->name = w->txt_connection_name->text();
+  w->connection->host = w->txt_connection_host->text();
+  w->connection->port = w->txt_connection_port->text().toInt();
+  w->connection->username = w->txt_connection_username->text();
+  w->connection->password = w->txt_connection_password->text();
+
+  Connection *connection = w->connection;
+  w->close();
+  tab_widget->removeTab(tab_widget->currentIndex());
+
+  connection->log();
+  create_page(connection);
 }

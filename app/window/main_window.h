@@ -18,6 +18,7 @@
 
 #include "sql_editor.h"
 #include "connection_window.h"
+#include "../models/connection.h"
 
 class MainWindow : public QMainWindow
 {
@@ -43,6 +44,7 @@ class MainWindow : public QMainWindow
 
   public slots:
     void new_connection();
+    void save_connection();
     void close_page();
 
   private:

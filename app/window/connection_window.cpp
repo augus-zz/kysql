@@ -37,27 +37,14 @@ void ConnectionWindow::init_widget(Connection *connection)
   btn_layout->addWidget(btn_save);
   btn_layout->addWidget(btn_cancel);
 
-  connect(btn_save, SIGNAL(clicked()), this, SLOT(save_connection()));
+  connect(btn_save, SIGNAL(clicked()), parentWidget(), SLOT(save_connection()));
   connect(btn_cancel, SIGNAL(clicked()), parentWidget(), SLOT(close_page()));
 
   form_layout->addRow(btn_layout);
   form_layout->setSpacing(6);
-  logger(std::to_string(form_layout->verticalSpacing()).c_str());
   setLayout(form_layout);
 }
 
 void ConnectionWindow::set_connection_properties()
 {
-
-}
-
-void ConnectionWindow::save_connection()
-{
-  connection->name = txt_connection_name->text();
-  connection->host = txt_connection_host->text();
-  connection->port = txt_connection_port->text().toInt();
-  connection->username = txt_connection_username->text();
-  connection->password = txt_connection_password->text();
-
-  logger("save_connection");
 }

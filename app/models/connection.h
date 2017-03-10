@@ -5,6 +5,8 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
+#include "../utils/logger.h"
+
 class Connection {
  public:
   QString name;
@@ -22,6 +24,9 @@ class Connection {
   Connection();
   Connection(QString host, short port);
   ~Connection();
+
+  void log();
+
   bool open();
   bool close();
   QSqlQuery *query(QString &query_string);

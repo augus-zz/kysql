@@ -25,10 +25,6 @@ class ConnectionWindow : public QWidget {
  public:
   Connection *connection;
 
-  public slots:
-  void save_connection();
-
- private:
  QLineEdit *txt_connection_name;
  QLineEdit *txt_connection_host;
  QLineEdit *txt_connection_port;
