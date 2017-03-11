@@ -2,15 +2,19 @@
 #define DATABASE_H
 
 #include <QtCore>
-#inclue <QString>
+#include <QList>
+#include <QString>
 
 #include "table.h"
 
 class Database {
- private:
+public:
+  explicit Database();
+  ~Database();
+ public:
   QString name;
   QString encoding;
-  Table *tables;
+  QList<Table *>tables;
 };
 
 #endif // DATABASE_H

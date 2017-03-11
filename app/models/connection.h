@@ -4,12 +4,23 @@
 #include <QString>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
 
 #include "../utils/logger.h"
+#include "database.h"
+#include "table.h"
+#include "column.h"
 
-class Connection {
+class Connection
+{
+ public:
+  explicit Connection();
+  Connection(QString host, short port);
+  ~Connection();
+
  public:
   QString name;
+  QString db_type;
   QString host;
   short port;
 
@@ -20,15 +31,20 @@ class Connection {
   // QProxy proxy;
 
   QSqlDatabase db;
- public:
-  Connection();
-  Connection(QString host, short port);
-  ~Connection();
 
+  bool connected;
+
+private:
+  void init_db();
+
+public:
   void log();
-
   bool open();
   bool close();
+  QStringList get_database_names();
+  QList<Table *> get_database_tables(QString db_name);
+  Table *get_table_details(QSqlDatabase *session_db, QString table_name);
+
   QSqlQuery *query(QString &query_string);
   QSqlQuery *new_query();
 };

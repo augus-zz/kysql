@@ -4,6 +4,7 @@ DbViewer::DbViewer(Connection *connection, QWidget *parent):QWidget(parent)
 {
   this->connection = connection;
   init();
+  init_db_info();
 }
 
 DbViewer::~DbViewer()
@@ -41,5 +42,52 @@ void DbViewer::init()
   h_layout->addLayout(query_layout);
 
   setLayout(h_layout);
-  //tab_widget->addTab(page, connection == NULL || connection->name.isNull() ? "New Connection" : connection->name);
+}
+
+void DbViewer::init_db_info()
+{
+  logger("DbViewer.init_db_info");
+  connection->log();
+  if(!connection->connected)
+  {
+    connection->open();
+  }
+
+  if(!connection->connected)
+  {
+    logger("DbViewer.init_db_info open connection failed");
+    return;
+  }
+
+  init_db_tree();
+}
+
+void DbViewer::init_db_tree()
+{
+  get_all_db();
+  get_db_tables();
+}
+
+bool DbViewer::get_all_db()
+{
+  logger("DbViewer.get_all_db");
+  QStringList db_names = connection->get_database_names();
+  logger(db_names.join(",").toStdString().c_str());
+  for(auto name : db_names)
+  {
+    Database *db = new Database;
+    db->name = name;
+    databases.append(db);
+  }
+  return true;
+}
+
+bool DbViewer::get_db_tables()
+{
+  logger("DbViewer.get_db_tables");
+  for(auto db : databases)
+  {
+    db->tables = connection->get_database_tables(db->name);
+  }
+  return true;
 }

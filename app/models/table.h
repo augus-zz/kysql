@@ -5,13 +5,17 @@
 #include <QSqlField>
 #include <QString>
 
+#include "column.h"
+
 class Table
 {
-  Q_OBJECT
+public:
+  explicit Table();
+  ~Table();
 
- private:
- QString name,
- QList<Field> field_list;
+public:
+  QString name;
+  QList<Column *> columns;
 };
 
-#endif TABLE_H
+#endif //TABLE_H
