@@ -1,17 +1,18 @@
 #include "connection_window.h"
 
-ConnectionWindow::ConnectionWindow(QWidget *parent, Qt::WindowFlags f):QWidget(parent, f)
+ConnectionWindow::ConnectionWindow(Connection *connection, QWidget *parent, Qt::WindowFlags f):QWidget(parent, f)
 {
+  this->connection = connection;
+  init();
 }
 
 ConnectionWindow::~ConnectionWindow()
 {
 }
 
-void ConnectionWindow::init_widget(Connection *connection)
+void ConnectionWindow::init()
 {
-  this->connection = connection;
-  if(!this->connection->name.isNull())
+  if(this->connection && !this->connection->name.isNull())
   {
     set_connection_properties();
     return;
@@ -38,7 +39,7 @@ void ConnectionWindow::init_widget(Connection *connection)
   btn_layout->addWidget(btn_cancel);
 
   connect(btn_save, SIGNAL(clicked()), parentWidget(), SLOT(save_connection()));
-  connect(btn_cancel, SIGNAL(clicked()), parentWidget(), SLOT(close_page()));
+  connect(btn_cancel, SIGNAL(clicked()), parentWidget(), SLOT(close_tab_page()));
 
   form_layout->addRow(btn_layout);
   form_layout->setSpacing(6);

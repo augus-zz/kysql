@@ -21,6 +21,6 @@ QMAKE_CXXFLAGS += -std=c++14
 DEFINES += QT_MESSAGELOGCONTEXT
 
 # Input
-HEADERS += app/application.h app/untils/logger.h app/window/main_window.h app/window/sql_editor.h app/window/connection_window.h app/models/connection.h
+HEADERS += app/application.h app/untils/logger.h app/window/main_window.h app/window/sql_editor.h app/window/connection_window.h app/models/connection.h app/window/db_viewer.h
 
-SOURCES += main.cpp app/application.cpp app/window/main_window.cpp app/window/sql_editor.cpp app/window/connection_window.cpp app/models/connection.cpp
+SOURCES += main.cpp app/application.cpp app/window/main_window.cpp app/window/sql_editor.cpp app/window/connection_window.cpp app/models/connection.cpp app/window/db_viewer.cpp

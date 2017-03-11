@@ -9,26 +9,28 @@
 #include <QStatusBar>
 #include <QContextMenuEvent>
 #include <QDockWidget>
-#include <QListWidget>
+#include <QTreeWidget>
 #include <QTableView>
 #include <QStandardItemModel>
 #include <QShortcut>
+#include <QCloseEvent>
 
 #include "../utils/logger.h"
 
 #include "sql_editor.h"
 #include "connection_window.h"
+#include "db_viewer.h"
 #include "../models/connection.h"
 
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
 
- public:
+  public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
- protected:
+  protected:
 #ifndef QT_NO_CONTEXTMENU
   void contextMenuEvent(QContextMenuEvent *event) override;
 #endif // QT_NO_CONTEXTMENU
@@ -36,16 +38,24 @@ class MainWindow : public QMainWindow
   private slots:
 
   private:
+  void init();
+
   void create_actions();
   void create_menus();
-  void create_page(Connection *connection);
-  void init();
+  void show_tab_page(Connection *connection);
   void create_shortcuts();
+  void closeEvent(QCloseEvent *event);
+  void close_connection_page(ConnectionWindow *connection_window);
+  void close_viewer_page(DbViewer *db_viewer);
 
   public slots:
     void new_connection();
     void save_connection();
-    void close_page();
+    void close_tab_page();
+
+  public:
+    QList<ConnectionWindow *> connection_windows;
+    QList<DbViewer *> db_viewers;
 
   private:
   QTabWidget *tab_widget;

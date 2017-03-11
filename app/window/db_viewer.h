@@ -4,16 +4,29 @@
 #include <QtCore>
 #include <QtGui>
 
-#include <QTreeView>
+#include <QTreeWidget>
+#include <QTableView>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
-class DbViewer: public QTreeView {
+#include "sql_editor.h"
+#include "../models/connection.h"
+
+#include "../utils/logger.h"
+
+class DbViewer: public QWidget {
   Q_OBJECT
 
  public:
-  explicit DbViewer(QWidget *parent = 0);
+  explicit DbViewer(Connection *connection, QWidget *parent = 0);
   ~DbViewer();
+  void init();
 
- protected:
+ public:
+   QTreeWidget *db_widget;
+   SQLEditor *sql_editor;
+   QTableView *table_view;
+   Connection *connection;
 
  private:
 };

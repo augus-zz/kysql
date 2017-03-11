@@ -18,8 +18,6 @@ class Application : public QApplication
 
   ~Application();
   int exec();
-
- public:
   QList<Connection*> connections;
 };
 

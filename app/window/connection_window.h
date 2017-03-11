@@ -15,11 +15,11 @@ class ConnectionWindow : public QWidget {
   Q_OBJECT
 
  public:
-  explicit ConnectionWindow(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+  explicit ConnectionWindow(Connection *connection, QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
   ~ConnectionWindow();
 
  public:
-  void init_widget(Connection *connection);
+  void init();
   void set_connection_properties();
 
  public:

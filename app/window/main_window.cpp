@@ -46,107 +46,148 @@ void MainWindow::init()
   {
     for( auto connection :( qobject_cast<Application *>qApp)->connections )
     {
-      create_page(connection);
+      show_tab_page(connection);
     }
   }
   else
   {
-    Connection *connection = new Connection;
-    (qobject_cast<Application *>qApp)->connections.append(connection);
-    create_page(connection);
+    show_tab_page(NULL);
   }
 }
 
-void MainWindow::create_page(Connection *connection)
+void MainWindow::show_tab_page(Connection *connection)
 {
-  logger("Mainwindow.create_page");
-  QVBoxLayout *sidebar_layout = new QVBoxLayout;
-  QListWidget *customerList = new QListWidget();
-  customerList->addItems(QStringList()
-                         << "John Doe, Harmony Enterprises, 12 Lakeside, Ambleton"
-                         << "Jane Doe, Memorabilia, 23 Watersedge, Beaton"
-                         << "Tammy Shea, Tiblanka, 38 Sea Views, Carlton"
-                         << "Tim Sheen, Caraba Gifts, 48 Ocean Way, Deal"
-                         << "Sol Harvey, Chicos Coffee, 53 New Springs, Eccleston"
-                         << "Sally Hobart, Tiroli Tea, 67 Long River, Fedula");
+  logger("MainWindow.show_tab_page");
+  if(connection == NULL)
+  {
+    ConnectionWindow *w = new ConnectionWindow(NULL, this);
+    tab_widget->addTab(w, "New Connection");
+    connection_windows.append(w);
+  }
+  else
+  {
+    DbViewer *w = new DbViewer(connection, this);
+    db_viewers.append(w);
+    tab_widget->addTab(w, connection->name);
+  }
+  // logger("Mainwindow.create_page");
+  // QVBoxLayout *sidebar_layout = new QVBoxLayout;
+  // QTreeWidget *db_tree = new QTreeWidget();
 
-  sidebar_layout->addWidget(customerList);
-  SQLEditor *sql_editor = new SQLEditor();
 
-  QTableView *table_view = new QTableView();
-  QStandardItemModel *model = new QStandardItemModel();
-  model->setColumnCount(2);
-  model->setHeaderData(0, Qt::Horizontal, QString::fromLocal8Bit("Card NO"));
-  model->setHeaderData(1, Qt::Horizontal, QString::fromLocal8Bit("Name"));
-  table_view->setModel(model);
+  // db_tree->setMinimumWidth(200);
+  // db_tree->setMaximumWidth(300);
+  // sidebar_layout->addWidget(db_tree);
+  // SQLEditor *sql_editor = new SQLEditor();
 
-  QVBoxLayout *query_layout = new QVBoxLayout;
-  query_layout->addWidget(sql_editor);
-  query_layout->addWidget(table_view);
+  // QTableView *table_view = new QTableView();
+  // QStandardItemModel *model = new QStandardItemModel();
+  // model->setColumnCount(2);
+  // model->setHeaderData(0, Qt::Horizontal, QString::fromLocal8Bit("Card NO"));
+  // model->setHeaderData(1, Qt::Horizontal, QString::fromLocal8Bit("Name"));
+  // table_view->setModel(model);
 
-  QHBoxLayout *h_layout = new QHBoxLayout;
-  h_layout->addLayout(sidebar_layout);
-  h_layout->addLayout(query_layout);
+  // QVBoxLayout *query_layout = new QVBoxLayout;
+  // query_layout->addWidget(sql_editor);
+  // query_layout->addWidget(table_view);
 
-  QWidget *page = new QWidget();
-  page->setLayout(h_layout);
-  tab_widget->addTab(page, connection == NULL || connection->name.isNull() ? "New Connection" : connection->name);
+  // QHBoxLayout *h_layout = new QHBoxLayout;
+  // h_layout->addLayout(sidebar_layout);
+  // h_layout->addLayout(query_layout);
+
+  // QWidget *page = new QWidget();
+  // page->setLayout(h_layout);
+  // tab_widget->addTab(page, connection == NULL || connection->name.isNull() ?
+  //                   "New Connection" : connection->name);
 }
 
 void MainWindow::create_shortcuts()
 {
   new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(close()));
   new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_N), this, SLOT(new_connection()));
-  new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_W), this, SLOT(close_page()));
+  new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_W), this, SLOT(close_tab_page()));
 }
 
 void MainWindow::new_connection()
 {
   logger("new connection");
-  ConnectionWindow *w = new ConnectionWindow(this);
+  ConnectionWindow *w = new ConnectionWindow(NULL, this);
 
-  Connection *connection = new Connection;
-  (qobject_cast<Application *>qApp)->connections.append(connection);
-  logger("append connection");
-  w->init_widget(connection);
   tab_widget->addTab(w, "New Connection");
   tab_widget->setCurrentWidget(w);
- }
+  connection_windows.append(w);
+}
 
-void MainWindow::close_page()
+void MainWindow::close_tab_page()
 {
   logger("close window");
-  if(tab_widget->count() == 1)
+  QWidget *w = tab_widget->currentWidget();
+  if(ConnectionWindow *cw = dynamic_cast<ConnectionWindow *>(w))
   {
-    logger("quit");
+    close_connection_page(cw);
+  }
+  else if(DbViewer *dw = dynamic_cast<DbViewer *>(w))
+  {
+    close_viewer_page(dw);
+  }
+}
+
+void MainWindow::close_viewer_page(DbViewer *db_viewer)
+{
+  logger("close viewer window");
+  db_viewers.removeOne(db_viewer);
+  db_viewer->connection->close();
+  db_viewer->close();
+
+  tab_widget->removeTab(tab_widget->currentIndex());
+  if(tab_widget->count() == 0)
+  {
     close();
     return;
   }
-  ConnectionWindow *w = (ConnectionWindow *) tab_widget->currentWidget();
-  if(w->connection->name.isNull())
-  {
-    (qobject_cast<Application *>qApp)->connections.removeOne(w->connection);
-    delete w->connection;
-  }
-  w->close();
+}
 
+void MainWindow::close_connection_page(ConnectionWindow *connection_window)
+{
+  logger("close connection window");
+  connection_windows.removeOne(connection_window);
+  connection_window->close();
   tab_widget->removeTab(tab_widget->currentIndex());
+
+  if(tab_widget->count() == 0)
+  {
+    close();
+    return;
+  }
 }
 
 void MainWindow::save_connection()
 {
   logger("save_connection");
   ConnectionWindow *w = (ConnectionWindow *) tab_widget->currentWidget();
-  w->connection->name = w->txt_connection_name->text();
-  w->connection->host = w->txt_connection_host->text();
-  w->connection->port = w->txt_connection_port->text().toInt();
-  w->connection->username = w->txt_connection_username->text();
-  w->connection->password = w->txt_connection_password->text();
-
-  Connection *connection = w->connection;
+  Connection *connection = new Connection;
+  connection->name = w->txt_connection_name->text();
+  connection->host = w->txt_connection_host->text();
+  connection->port = w->txt_connection_port->text().toInt();
+  connection->username = w->txt_connection_username->text();
+  connection->password = w->txt_connection_password->text();
+  connection->log();
+  connection_windows.removeOne(w);
   w->close();
   tab_widget->removeTab(tab_widget->currentIndex());
 
-  connection->log();
-  create_page(connection);
+  (qobject_cast<Application *>qApp)->connections.append(connection);
+  show_tab_page(connection);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+  logger("MainWindow.closeEvent");
+  for(auto connection: (qobject_cast<Application *>qApp)->connections)
+  {
+    //save
+    (qobject_cast<Application *>qApp)->connections.removeOne(connection);
+    delete connection;
+  }
+  QMainWindow::closeEvent(event);
 }
