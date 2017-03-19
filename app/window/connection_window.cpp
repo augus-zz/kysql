@@ -22,6 +22,11 @@ void ConnectionWindow::init()
   txt_connection_port = new QLineEdit;
   txt_connection_username = new QLineEdit;
   txt_connection_password = new QLineEdit;
+
+  txt_connection_name->setPlaceholderText(QString("New Connection"));
+  txt_connection_host->setPlaceholderText(QString("localost"));
+  txt_connection_port->setPlaceholderText(QString("3306"));
+  txt_connection_username->setPlaceholderText(QString("root"));
   txt_connection_password->setEchoMode(QLineEdit::EchoMode::Password);
 
   QPushButton *btn_save = new QPushButton(tr("&Save"));

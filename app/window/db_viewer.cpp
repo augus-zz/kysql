@@ -66,6 +66,15 @@ void DbViewer::init_db_tree()
 {
   get_all_db();
   get_db_tables();
+
+  db_widget->setColumnCount(1);
+
+  QList<QTreeWidgetItem *> items;
+  for(auto database : databases)
+  {
+    items.append(new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(database->name))));
+  }
+  db_widget->insertTopLevelItems(0, items);
 }
 
 bool DbViewer::get_all_db()
