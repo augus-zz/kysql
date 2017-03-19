@@ -8,7 +8,6 @@
 #include <QHBoxLayout>
 
 #include "../utils/logger.h"
-
 #include "../models/connection.h"
 
 class ConnectionWindow : public QWidget {

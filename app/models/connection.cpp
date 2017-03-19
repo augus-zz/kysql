@@ -79,7 +79,7 @@ QList<Table *> Connection::get_database_tables(QString db_name)
   while(query.next())
   {
     QString table_name = query.value(0).toString();
-    tables.append(get_table_details(&session_db, db_name));
+    tables.append(get_table_details(&session_db, table_name));
   }
 
   return tables;

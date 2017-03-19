@@ -5,6 +5,7 @@
 #include <QtGui>
 
 #include <QTreeWidget>
+#include <QTreeWidgetItem>
 #include <QTableView>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -31,6 +32,9 @@ class DbViewer: public QWidget {
    QTableView *table_view;
    Connection *connection;
    QList<Database *> databases;
+
+   public slots:
+     void db_select(QTreeWidgetItem *, int column);
 
 public:
    void init_db_info();
