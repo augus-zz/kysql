@@ -68,7 +68,7 @@ void MainWindow::show_tab_page(Connection *connection)
   {
     DbViewer *w = new DbViewer(connection, this);
     db_viewers.append(w);
-    tab_widget->addTab(w, connection->name);
+    tab_widget->addTab(w, connection->name.isEmpty() ? connection->host : connection->name);
   }
   // logger("Mainwindow.create_page");
   // QVBoxLayout *sidebar_layout = new QVBoxLayout;
@@ -166,8 +166,8 @@ void MainWindow::save_connection()
   logger("save_connection");
   ConnectionWindow *w = (ConnectionWindow *) tab_widget->currentWidget();
   Connection *connection = new Connection;
-  connection->name = w->txt_connection_name->text();
   connection->host = w->txt_connection_host->text().isEmpty() ? "localhost" : w->txt_connection_host->text();
+  connection->name = w->txt_connection_name->text().isEmpty() ? connection->host : connection->name;
   connection->port = w->txt_connection_port->text().toInt() == 0 ? 3306 : w->txt_connection_port->text().toInt();
   connection->username = w->txt_connection_username->text().isEmpty() ? "root" : w->txt_connection_username->text();
   connection->password = w->txt_connection_password->text();

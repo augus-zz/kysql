@@ -68,7 +68,7 @@ void DbViewer::init_db_tree()
   //get_db_tables();
 
   db_widget->setColumnCount(1);
-
+  db_widget->setHeaderHidden(true);
   QList<QTreeWidgetItem *> db_items;
   for(auto database : databases)
   {
