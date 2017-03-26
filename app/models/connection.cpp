@@ -79,20 +79,31 @@ QList<Table *> Connection::get_database_tables(QString db_name)
   while(query.next())
   {
     QString table_name = query.value(0).toString();
-    tables.append(get_table_details(&session_db, table_name));
+    Table *table = new Table;
+    table->columns = get_table_details(db_name, table_name);
+    tables.append(table);
   }
 
   return tables;
 }
 
-Table * Connection::get_table_details(QSqlDatabase *session_db, QString table_name)
+QList<Column *> Connection::get_table_details(QString db_name, QString table_name)
 {
-    Table *table = new Table;
-    table->name = table_name;
-    QSqlQuery query(QString("desc %1").arg(table_name), *session_db);
-    query.exec();
-    // todo
-    return table;
+  QSqlDatabase session_db = QSqlDatabase::cloneDatabase(db, db_name);
+  session_db.setDatabaseName(db_name);
+  session_db.open();
+  Table *table = new Table;
+  table->name = table_name;
+  QList<Column *> columns;
+  QSqlQuery query(QString("desc %1").arg(table_name), session_db);
+  query.exec();
+  while(query.next())
+  {
+    Column *column = new Column;
+    column->name = query.value(0).toString();
+    columns.append(column);
+  }
+  return columns;
 }
 
 QSqlQuery *Connection::query(QString &query_string)

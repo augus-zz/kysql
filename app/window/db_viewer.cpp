@@ -75,7 +75,7 @@ void DbViewer::init_db_tree()
     QTreeWidgetItem *item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(database->name)));
     db_items.append(item);
   }
-  connect(db_widget, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(db_select(QTreeWidgetItem *, int)));
+  connect(db_widget, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(tree_item_select(QTreeWidgetItem *, int)));
   db_widget->insertTopLevelItems(0, db_items);
 }
 
@@ -103,50 +103,38 @@ bool DbViewer::get_db_tables()
   return true;
 }
 
-void DbViewer::db_select(QTreeWidgetItem *tree_item, int column)
+void DbViewer::tree_item_select(QTreeWidgetItem *tree_item, int column)
 {
-  logger(QString("tree_item selected, db_name: %1").arg(tree_item->text(0)).toStdString().c_str());
-  QList <QTreeWidgetItem *>children = tree_item->takeChildren();
-  for(auto item : children)
-  {
-    delete item;
-  }
+  logger(QString("tree_item selected, name: %1").arg(tree_item->text(0)).toStdString().c_str());
   QTreeWidgetItem *parent = tree_item->parent();
-  if( NULL== parent)
+  if(NULL == parent)
   {
     // database
     logger("tree_item selected, database");
-    Database * db;
-    for(auto database : databases)
+    if(tree_item->childCount() == 0)
     {
-      if(database->name == tree_item->text(0))
-      {
-        db = database;
-        break;
-      }
-    }
-    if(db)
-    {
-      QList<QTreeWidgetItem *> table_items;
-      db->tables = connection->get_database_tables(db->name);
-      for(auto tb : db->tables)
-      {
-        logger(QString("table name: %1").arg(tb->name).toStdString().c_str());
-        QTreeWidgetItem *item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(tb->name)));
-        table_items.append(item);
-      }
-      tree_item->addChildren(table_items);
+      db_select(tree_item, column);
     }
   }
   else
   {
-    int col = parent->indexOfChild(tree_item);
-    if(0 == col)
+    int depth = 1;
+    while(NULL != parent->parent())
+    {
+      depth ++;
+      parent = parent->parent();
+    }
+
+    if(1 == depth)
     {
       //table
       logger("tree_item selected, table");
+      if(tree_item->childCount() == 0)
+      {
+        table_select(tree_item, column);
+      }
     }
-    else if(1 == col)
+    else if(2 == depth)
     {
       //field
       logger("tree_item selected, field");
@@ -156,5 +144,70 @@ void DbViewer::db_select(QTreeWidgetItem *tree_item, int column)
       //unknown
       logger("tree_item selected, unknown");
     }
+  }
+}
+
+void DbViewer::db_select(QTreeWidgetItem *tree_item, int column)
+{
+  Database *db;
+  for(auto database : databases)
+  {
+    if(database->name == tree_item->text(0))
+    {
+      db = database;
+      break;
+    }
+  }
+  if(db && tree_item->childCount() == 0)
+  {
+    QList<QTreeWidgetItem *> table_items;
+    db->tables = connection->get_database_tables(db->name);
+    for(auto tb : db->tables)
+    {
+      logger(QString("table name: %1").arg(tb->name).toStdString().c_str());
+      QTreeWidgetItem *item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(tb->name)));
+      table_items.append(item);
+    }
+    tree_item->addChildren(table_items);
+  }
+}
+
+void DbViewer::table_select(QTreeWidgetItem *tree_item, int column)
+{
+  Database *db;
+  Table *table;
+  for(auto database : databases)
+  {
+    if(database->name == tree_item->parent()->text(0))
+    {
+      db = database;
+      break;
+    }
+  }
+
+  if(!db)
+  {
+    return;
+  }
+
+  for(auto tb : db->tables)
+  {
+    if(tb->name == tree_item->parent()->text(0))
+    {
+      table = tb;
+      break;
+    }
+  }
+
+  if(table && tree_item->childCount() == 0)
+  {
+    table->columns = connection->get_table_details(db->name, table->name);
+    QList<QTreeWidgetItem *> column_items;
+    for(auto column : table->columns)
+    {
+      QTreeWidgetItem *item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(column->name)));
+      column_items.append(item);
+    }
+    tree_item->addChildren(column_items);
   }
 }
