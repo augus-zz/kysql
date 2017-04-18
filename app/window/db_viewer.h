@@ -8,6 +8,8 @@
 #include <QTableView>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QComboBox>
+
 #include <QSqlError>
 #include <QStringList>
 
@@ -19,22 +21,27 @@
 class DbViewer: public QWidget {
   Q_OBJECT
 
- public: explicit DbViewer(Connection *connection, QWidget *parent = 0); ~DbViewer(); void init(); public: QTreeWidget *db_widget;
+ public: explicit DbViewer(Connection *connection, QWidget *parent = 0); ~DbViewer();
+   void init();
+
+ public:
+   QTreeWidget *table_widget;
+   QComboBox *database_cbx;
    SQLEditor *sql_editor;
-   QTableView *table_view;
+   QTableView *record_view;
    Connection *connection;
    QList<Database *> databases;
    Database *current_database;
 public slots:
+   void db_select(int);
    void tree_item_select(QTreeWidgetItem *, int);
 
 public:
    void init_db_info();
-   void init_db_tree();
+   void init_db_combox();
+   void init_table_tree();
    bool get_all_db();
    bool get_db_tables();
-
-   void db_select(QTreeWidgetItem *, int);
    void table_select(QTreeWidgetItem *, int);
 };
 

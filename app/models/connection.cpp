@@ -69,9 +69,17 @@ QStringList Connection::get_database_names()
 QList<Table *> Connection::get_database_tables(QString db_name)
 {
   logger(QString("Connection.get_database_tables, db: %1").arg(db_name).toStdString().c_str());
-  QSqlDatabase session_db = QSqlDatabase::cloneDatabase(db, db_name);
-  session_db.setDatabaseName(db_name);
-  session_db.open();
+  QSqlDatabase session_db;
+  if(QSqlDatabase::contains(db_name))
+  {
+    session_db = QSqlDatabase::database(db_name);
+  }
+  else
+  {
+    session_db = QSqlDatabase::cloneDatabase(db, db_name);
+    session_db.setDatabaseName(db_name);
+    session_db.open();
+  }
 
   QList<Table *> tables;
   QSqlQuery query("show tables;", session_db);
@@ -89,9 +97,18 @@ QList<Table *> Connection::get_database_tables(QString db_name)
 
 QList<Column *> Connection::get_table_details(QString db_name, QString table_name)
 {
-  QSqlDatabase session_db = QSqlDatabase::cloneDatabase(db, db_name);
-  session_db.setDatabaseName(db_name);
-  session_db.open();
+  QSqlDatabase session_db;
+  if(QSqlDatabase::contains(db_name))
+  {
+    session_db = QSqlDatabase::database(db_name);
+  }
+  else
+  {
+    session_db = QSqlDatabase::cloneDatabase(db, db_name);
+    session_db.setDatabaseName(db_name);
+    session_db.open();
+  }
+
   Table *table = new Table;
   table->name = table_name;
   QList<Column *> columns;
