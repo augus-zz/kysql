@@ -4,28 +4,25 @@ DbViewer::DbViewer(Connection *connection, QWidget *parent):QWidget(parent)
 {
   this->connection = connection;
   init();
-  init_db_info();
 }
 
 DbViewer::~DbViewer()
 {
   if(connection)
-  {
-    connection->close();
-  }
+  { connection->close(); }
 }
 
 void DbViewer::init()
 {
   logger("DbViewer.init");
   QVBoxLayout *sidebar_layout = new QVBoxLayout;
-  table_widget = new QTreeWidget();
-  table_widget->setMinimumWidth(200);
-  table_widget->setMaximumWidth(300);
+  table_view = new QTreeWidget();
+  table_view->setMinimumWidth(200);
+  table_view->setMaximumWidth(300);
 
   database_cbx = new QComboBox();
   sidebar_layout->addWidget(database_cbx);
-  sidebar_layout->addWidget(table_widget);
+  sidebar_layout->addWidget(table_view);
 
   sql_editor = new SQLEditor();
   record_view = new QTableView();
@@ -44,6 +41,8 @@ void DbViewer::init()
   h_layout->addLayout(query_layout);
 
   setLayout(h_layout);
+
+  init_db_info();
 }
 
 void DbViewer::init_db_info()
@@ -81,9 +80,9 @@ void DbViewer::init_table_tree()
 {
   get_db_tables();
 
-  table_widget->setColumnCount(1);
-  table_widget->setHeaderHidden(true);
-  table_widget->clear();
+  table_view->setColumnCount(1);
+  table_view->setHeaderHidden(true);
+  table_view->clear();
   QList<QTreeWidgetItem *> table_items;
   for(auto table : current_database->tables)
   {
@@ -91,8 +90,9 @@ void DbViewer::init_table_tree()
     table_items.append(item);
     logger(QString("db_viewer.init_db_tree, table_name: %1").arg(table->name).toStdString().c_str());
   }
-  connect(table_widget, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(tree_item_select(QTreeWidgetItem *, int)));
-  table_widget->insertTopLevelItems(0, table_items);
+  connect(table_view, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(tree_item_select(QTreeWidgetItem *, int)));
+  connect(table_view, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(table_query(QTreeWidgetItem *, int)));
+  table_view->insertTopLevelItems(0, table_items);
 }
 
 bool DbViewer::get_all_db()
@@ -158,6 +158,40 @@ void DbViewer::tree_item_select(QTreeWidgetItem *tree_item, int column)
       logger("tree_item selected, unknown");
     }
   }
+}
+
+void DbViewer::table_query(QTreeWidgetItem *tree_item, int column)
+{
+  logger(QString("DbViewer.table_query, name: %1").arg(tree_item->text(0)).toStdString().c_str());
+  QTreeWidgetItem *parent = tree_item->parent();
+  if(NULL == parent)
+  {
+    // table
+    logger("tree_item selected, table");
+    if(tree_item->childCount() == 0)
+    {
+      query(tree_item->text(0));
+    }
+  }
+}
+
+void DbViewer::query(QString table_name)
+{
+  QSqlTableModel model(Q_NULLPTR, connection->get_db(current_database->name));
+  model.setTable(table_name);
+  model.setEditStrategy(QSqlTableModel::OnManualSubmit);
+  model.select();
+
+  Table *table;
+  table->name = table_name;
+  connection->get_table_details(current_database->name, table);
+  int column_count = 0;
+  for(auto column : table->columns)
+  {
+    model.setHeaderData(column_count++, Qt::Horizontal, QObject::tr(column->name.toStdString().c_str()));
+  }
+  record_view->setModel(&model);
+  record_view->show();
 }
 
 void DbViewer::table_select(QTreeWidgetItem *tree_item, int column)

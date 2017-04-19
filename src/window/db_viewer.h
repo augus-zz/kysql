@@ -25,7 +25,7 @@ class DbViewer: public QWidget {
    void init();
 
  public:
-   QTreeWidget *table_widget;
+   QTreeWidget *table_view;
    QComboBox *database_cbx;
    SQLEditor *sql_editor;
    QTableView *record_view;
@@ -35,6 +35,7 @@ class DbViewer: public QWidget {
 public slots:
    void db_select(int);
    void tree_item_select(QTreeWidgetItem *, int);
+   void table_query(QTreeWidgetItem *, int);
 
 public:
    void init_db_info();
@@ -43,6 +44,7 @@ public:
    bool get_all_db();
    bool get_db_tables();
    void table_select(QTreeWidgetItem *, int);
+   void query(QString table_name);
 };
 
 #endif // DB_VIEWER_H

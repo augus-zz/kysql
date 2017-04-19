@@ -53,6 +53,22 @@ void Connection::init_db()
   db.setConnectOptions("MYSQL_OPT_CONNECT_TIMEOUT=5");
 }
 
+QSqlDatabase Connection::get_db(QString db_name)
+{
+  QSqlDatabase sql_db;
+  if(QSqlDatabase::contains(db_name))
+  {
+    sql_db = QSqlDatabase::database(db_name);
+  }
+  else
+  {
+    sql_db = QSqlDatabase::cloneDatabase(db, db_name);
+    sql_db.setDatabaseName(db_name);
+    sql_db.open();
+  }
+  return sql_db;
+}
+
 QStringList Connection::get_database_names()
 {
   logger("Connection.get_database_names");

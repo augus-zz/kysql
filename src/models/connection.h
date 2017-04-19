@@ -42,6 +42,7 @@ public:
   bool open();
   bool close();
   QStringList get_database_names();
+  QSqlDatabase get_db(QString db_name);
   QList<Table *> get_database_tables(QString db_name);
   void get_table_details(QString db_name, Table *table);
 
