@@ -89,6 +89,7 @@ void DbViewer::init_table_tree()
   {
     QTreeWidgetItem *item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(table->name)));
     table_items.append(item);
+    logger(QString("db_viewer.init_db_tree, table_name: %1").arg(table->name).toStdString().c_str());
   }
   connect(table_widget, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(tree_item_select(QTreeWidgetItem *, int)));
   table_widget->insertTopLevelItems(0, table_items);
@@ -173,7 +174,7 @@ void DbViewer::table_select(QTreeWidgetItem *tree_item, int column)
 
   if(table && tree_item->childCount() == 0)
   {
-    table->columns = connection->get_table_details(current_database->name, table->name);
+    connection->get_table_details(current_database->name, table);
     QList<QTreeWidgetItem *> column_items;
     for(auto column : table->columns)
     {

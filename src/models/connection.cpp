@@ -86,17 +86,18 @@ QList<Table *> Connection::get_database_tables(QString db_name)
   query.exec();
   while(query.next())
   {
-    QString table_name = query.value(0).toString();
     Table *table = new Table;
-    table->columns = get_table_details(db_name, table_name);
+    table->name = query.value(0).toString();
+    get_table_details(db_name, table);
     tables.append(table);
   }
 
   return tables;
 }
 
-QList<Column *> Connection::get_table_details(QString db_name, QString table_name)
+void Connection::get_table_details(QString db_name, Table *table)
 {
+  logger(QString("connection.get_table_details, db_name: %1, table_name: %2").arg(db_name).arg(table->name).toStdString().c_str());
   QSqlDatabase session_db;
   if(QSqlDatabase::contains(db_name))
   {
@@ -109,10 +110,8 @@ QList<Column *> Connection::get_table_details(QString db_name, QString table_nam
     session_db.open();
   }
 
-  Table *table = new Table;
-  table->name = table_name;
   QList<Column *> columns;
-  QSqlQuery query(QString("desc %1").arg(table_name), session_db);
+  QSqlQuery query(QString("desc %1").arg(table->name), session_db);
   query.exec();
   while(query.next())
   {
@@ -120,7 +119,7 @@ QList<Column *> Connection::get_table_details(QString db_name, QString table_nam
     column->name = query.value(0).toString();
     columns.append(column);
   }
-  return columns;
+  table->columns = columns;
 }
 
 QSqlQuery *Connection::query(QString &query_string)

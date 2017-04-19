@@ -21,12 +21,12 @@ QMAKE_CXXFLAGS += -std=c++14
 DEFINES += QT_MESSAGELOGCONTEXT
 
 # Input
-HEADERS += app/application.h app/untils/logger.h \
-app/window/main_window.h app/window/sql_editor.h \
-app/window/connection_window.h app/models/connection.h \
-app/window/db_viewer.h app/models/database.h app/models/table.h app/models/column.h
+HEADERS += src/application.h src/untils/logger.h \
+src/window/main_window.h src/window/sql_editor.h \
+src/window/connection_window.h src/models/connection.h \
+src/window/db_viewer.h src/models/database.h src/models/table.h src/models/column.h
 
-SOURCES += main.cpp app/application.cpp app/window/main_window.cpp \
-app/window/sql_editor.cpp app/window/connection_window.cpp \
-app/models/connection.cpp app/window/db_viewer.cpp \
-app/models/database.cpp app/models/table.cpp app/models/column.cpp
+SOURCES += main.cpp src/application.cpp src/window/main_window.cpp \
+src/window/sql_editor.cpp src/window/connection_window.cpp \
+src/models/connection.cpp src/window/db_viewer.cpp \
+src/models/database.cpp src/models/table.cpp src/models/column.cpp
