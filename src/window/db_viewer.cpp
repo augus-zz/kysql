@@ -26,11 +26,6 @@ void DbViewer::init()
 
   sql_editor = new SQLEditor();
   record_view = new QTableView();
-  QStandardItemModel *model = new QStandardItemModel();
-  model->setColumnCount(2);
-  model->setHeaderData(0, Qt::Horizontal, QString::fromLocal8Bit("Card NO"));
-  model->setHeaderData(1, Qt::Horizontal, QString::fromLocal8Bit("Name"));
-  record_view->setModel(model);
 
   QVBoxLayout *query_layout = new QVBoxLayout;
   query_layout->addWidget(sql_editor);
@@ -74,6 +69,7 @@ void DbViewer::init_db_combox()
   }
   connect(database_cbx, SIGNAL(currentIndexChanged(int)), this, SLOT(db_select(int)));
   database_cbx->addItems(db_names);
+  current_database = databases.at(0);
 }
 
 void DbViewer::init_table_tree()
@@ -167,31 +163,29 @@ void DbViewer::table_query(QTreeWidgetItem *tree_item, int column)
   if(NULL == parent)
   {
     // table
-    logger("tree_item selected, table");
-    if(tree_item->childCount() == 0)
-    {
-      query(tree_item->text(0));
-    }
+    logger("table selected, table");
+    query(tree_item->text(0));
   }
 }
 
 void DbViewer::query(QString table_name)
 {
-  QSqlTableModel model(Q_NULLPTR, connection->get_db(current_database->name));
-  model.setTable(table_name);
-  model.setEditStrategy(QSqlTableModel::OnManualSubmit);
-  model.select();
+  logger(QString("DbViewer.query, db: %1, name: %2").arg(current_database->name).arg(table_name).toStdString().c_str());
+  QSqlDatabase db = connection->get_db(current_database->name);
+  QSqlTableModel *model = new QSqlTableModel(this, connection->get_db(current_database->name));
+  model->setTable(table_name);
+  model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+  model->select();
 
-  Table *table;
-  table->name = table_name;
-  connection->get_table_details(current_database->name, table);
+  Table table;
+  table.name = table_name;
+  connection->get_table_details(current_database->name, &table);
   int column_count = 0;
-  for(auto column : table->columns)
+  for(auto column : table.columns)
   {
-    model.setHeaderData(column_count++, Qt::Horizontal, QObject::tr(column->name.toStdString().c_str()));
+    model->setHeaderData(column_count++, Qt::Horizontal, QObject::tr(column->name.toStdString().c_str()));
   }
-  record_view->setModel(&model);
-  record_view->show();
+  record_view->setModel(model);
 }
 
 void DbViewer::table_select(QTreeWidgetItem *tree_item, int column)
