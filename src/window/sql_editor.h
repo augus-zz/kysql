@@ -13,6 +13,10 @@
 #include <QAbstractListModel>
 #include <QStringListModel>
 #include <QScrollBar>
+#include <QShortcut>
+#include <QKeySequence>
+
+#include "../utils/logger.h"
 
 class SQLEditor;
 class SQLEditorSidebar;
@@ -275,6 +279,18 @@ private:
 private slots:
     void
     updateCursor ( );
+
+private slots:
+    void
+    increFontsize( );
+
+private slots:
+    void
+    decreFontsize( );
+
+private slots:
+    void
+    resetFontsize( );
 
 public slots:
     void

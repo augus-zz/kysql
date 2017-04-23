@@ -539,6 +539,10 @@ SQLEditor::SQLEditor ( QWidget *parent ) : QPlainTextEdit( parent ) {
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSidebar()));
     connect(this, SIGNAL(updateRequest(QRect, int)), this, SLOT(updateSidebar(QRect, int)));
 
+    new QShortcut(QKeySequence(Qt::CTRL + QKeySequence::ZoomIn), this, SLOT(increFontsize()));
+    new QShortcut(QKeySequence(Qt::CTRL + QKeySequence::ZoomOut), this, SLOT(decreFontsize()));
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_0), this, SLOT(resetFontsize()));
+
     QString doublequoted_string = "\"(?:[^\\\\\"]|\\\\.)*\"";
     QString singlequoted_string = "'(?:[^\\\\']|\\\\.)*'";
     QString c_style_comment = "/\\*(?:[^*]*|\\*[^/])*\\*/";
@@ -588,7 +592,13 @@ SQLEditor::SQLEditor ( QWidget *parent ) : QPlainTextEdit( parent ) {
     Completer->setWrapAround(false);
     this->setCompleter(Completer);
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_LINUX)
+    QFont textFont = font();
+    textFont.setPointSize(15);
+    textFont.setFamily("ubuntu mono");
+    setFont(textFont);
+
+#elif defined(Q_OS_MAC)
     QFont textFont = font();
     textFont.setPointSize(15);
     textFont.setFamily("Courier");
@@ -1743,6 +1753,37 @@ SQLEditor::wheelEvent ( QWheelEvent *event ) {
     }
     QPlainTextEdit::wheelEvent(event);
 }
+
+void
+SQLEditor::increFontsize( ) {
+  logger("sql_editor.increFontsize");
+  QFont textFont = font();
+  int pointSize = textFont.pointSize() + 1;
+  pointSize = qBound(10, pointSize, 40);
+  textFont.setPointSize(pointSize);
+  setFont(textFont);
+  updateSidebar();
+}
+
+void
+SQLEditor::decreFontsize( ) {
+  logger("sql_editor.decreFontsize");
+  QFont textFont = font();
+  int pointSize = textFont.pointSize() - 1;
+  pointSize = qBound(10, pointSize, 40);
+  textFont.setPointSize(pointSize);
+  setFont(textFont);
+  updateSidebar();
+}
+
+void
+SQLEditor::resetFontsize( ) {
+  logger("sql_editor.resetFontsize");
+  QFont textFont = font();
+  textFont.setPointSize(16);
+  setFont(textFont);
+}
+
 
 void
 SQLEditor::updateCursor ( ) {
