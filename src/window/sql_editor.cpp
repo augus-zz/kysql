@@ -539,10 +539,6 @@ SQLEditor::SQLEditor ( QWidget *parent ) : QPlainTextEdit( parent ) {
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSidebar()));
     connect(this, SIGNAL(updateRequest(QRect, int)), this, SLOT(updateSidebar(QRect, int)));
 
-    new QShortcut(QKeySequence(Qt::CTRL + QKeySequence::ZoomIn), this, SLOT(increFontsize()));
-    new QShortcut(QKeySequence(Qt::CTRL + QKeySequence::ZoomOut), this, SLOT(decreFontsize()));
-    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_0), this, SLOT(resetFontsize()));
-
     QString doublequoted_string = "\"(?:[^\\\\\"]|\\\\.)*\"";
     QString singlequoted_string = "'(?:[^\\\\']|\\\\.)*'";
     QString c_style_comment = "/\\*(?:[^*]*|\\*[^/])*\\*/";
@@ -594,13 +590,13 @@ SQLEditor::SQLEditor ( QWidget *parent ) : QPlainTextEdit( parent ) {
 
 #if defined(Q_OS_LINUX)
     QFont textFont = font();
-    textFont.setPointSize(15);
+    textFont.setPointSize(14);
     textFont.setFamily("ubuntu mono");
     setFont(textFont);
 
 #elif defined(Q_OS_MAC)
     QFont textFont = font();
-    textFont.setPointSize(15);
+    textFont.setPointSize(14);
     textFont.setFamily("Courier");
     setFont(textFont);
 #elif defined(Q_OS_UNIX)
@@ -799,6 +795,7 @@ SQLEditor::Compute_Current_Paren_Indent ( QString Current_Text,
 
 void
 SQLEditor::keyPressEvent ( QKeyEvent* event ) {
+    logger(QString("key: %1").arg(event->key()).toStdString().c_str());
     static QString part_of_word("abcdefghijklmnopqrstuvwxyz_0123456789");
     static QString end_of_word("~!@#$%^&*()_+{}|:\"<>?,./;'[]\\-=");
 
@@ -821,7 +818,6 @@ SQLEditor::keyPressEvent ( QKeyEvent* event ) {
            case Qt::Key_Backtab:
                 event->ignore();
                 return; // Let QCompleter do default behavior
-
            default:
                break;
         }
@@ -1028,8 +1024,20 @@ SQLEditor::keyPressEvent ( QKeyEvent* event ) {
     }
     else if ((event->key() == Qt::Key_Equal) and
              ((modifiers & Qt::ControlModifier) == Qt::ControlModifier) and
-             ((modifiers & Qt::ShiftModifier) == Qt::NoModifier)) {
+             ((modifiers & Qt::ShiftModifier) == Qt::ShiftModifier)) {
         Simple_Format_SQL();
+    }
+    else if ((event->key() == Qt::Key_Equal) and
+             ((modifiers & Qt::ControlModifier) == Qt::ControlModifier)) {
+        increFontsize();
+    }
+    else if ((event->key() == Qt::Key_Minus) and
+             ((modifiers & Qt::ControlModifier) == Qt::ControlModifier)) {
+        decreFontsize();
+    }
+    else if ((event->key() == Qt::Key_0) and
+             ((modifiers & Qt::ControlModifier) == Qt::ControlModifier)) {
+        resetFontsize();
     }
     else {
         if ((event->key() == Qt::Key_Period) and

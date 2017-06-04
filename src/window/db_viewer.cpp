@@ -210,5 +210,6 @@ void DbViewer::table_select(QTreeWidgetItem *tree_item, int column)
       column_items.append(item);
     }
     tree_item->addChildren(column_items);
+    table_view->expandItem(tree_item);
   }
 }
