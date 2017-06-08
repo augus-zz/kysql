@@ -140,6 +140,9 @@ public:
     Simple_Format_SQL ( );
 
     void
+    executeQuery ( );
+
+    void
     setColor ( ColorComponent component,
                const QColor &color );
 

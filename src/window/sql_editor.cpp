@@ -1039,6 +1039,11 @@ SQLEditor::keyPressEvent ( QKeyEvent* event ) {
              ((modifiers & Qt::ControlModifier) == Qt::ControlModifier)) {
         resetFontsize();
     }
+    else if ((event->key() == Qt::Key_X) and
+             ((modifiers & Qt::ControlModifier) == Qt::ControlModifier) and
+             ((modifiers & Qt::ShiftModifier) == Qt::NoModifier)) {
+        executeQuery();
+    }
     else {
         if ((event->key() == Qt::Key_Period) and
             AutoCompleteIdentifiersEnabled and
@@ -1535,6 +1540,12 @@ SQLEditor::Simple_Format_SQL ( ) {
         text_cursor.setPosition(0);
         this->setTextCursor(text_cursor);
     }
+}
+
+void
+SQLEditor::executeQuery() {
+  logger("SQLEditor::Execute_Query");
+  logger(Selected_Text().toStdString().c_str());
 }
 
 void
