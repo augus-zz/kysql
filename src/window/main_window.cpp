@@ -44,7 +44,7 @@ void MainWindow::init()
 
   if(!(qobject_cast<Application *>qApp)->connections.isEmpty())
   {
-    for( auto connection :( qobject_cast<Application *>qApp)->connections )
+    for( auto &connection :( qobject_cast<Application *>qApp)->connections )
     {
       show_tab_page(connection);
     }
@@ -183,7 +183,7 @@ void MainWindow::save_connection()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
   logger("MainWindow.closeEvent");
-  for(auto connection: (qobject_cast<Application *>qApp)->connections)
+  for(auto &connection: (qobject_cast<Application *>qApp)->connections)
   {
     //save
     (qobject_cast<Application *>qApp)->connections.removeOne(connection);

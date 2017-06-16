@@ -63,7 +63,7 @@ void DbViewer::init_db_combox()
   get_all_db();
 
   QStringList db_names;
-  for(auto database : databases)
+  for(auto &database : databases)
   {
     db_names.append(database->name);
   }
@@ -80,7 +80,7 @@ void DbViewer::init_table_tree()
   table_view->setHeaderHidden(true);
   table_view->clear();
   QList<QTreeWidgetItem *> table_items;
-  for(auto table : current_database->tables)
+  for(auto &table : current_database->tables)
   {
     QTreeWidgetItem *item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(table->name)));
     table_items.append(item);
@@ -96,7 +96,7 @@ bool DbViewer::get_all_db()
   logger("DbViewer.get_all_db");
   QStringList db_names = connection->get_database_names();
   logger(db_names.join(",").toStdString().c_str());
-  for(auto name : db_names)
+  for(auto &name : db_names)
   {
     Database *db = new Database;
     db->name = name;
@@ -181,7 +181,7 @@ void DbViewer::query(QString table_name)
   table.name = table_name;
   connection->get_table_details(current_database->name, &table);
   int column_count = 0;
-  for(auto column : table.columns)
+  for(auto &column : table.columns)
   {
     model->setHeaderData(column_count++, Qt::Horizontal, QObject::tr(column->name.toStdString().c_str()));
   }
@@ -204,7 +204,7 @@ void DbViewer::table_select(QTreeWidgetItem *tree_item, int column)
   {
     connection->get_table_details(current_database->name, table);
     QList<QTreeWidgetItem *> column_items;
-    for(auto column : table->columns)
+    for(auto &column : table->columns)
     {
       QTreeWidgetItem *item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(column->name)));
       column_items.append(item);
