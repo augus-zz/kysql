@@ -32,6 +32,23 @@ QVariant QueryModel::headerData(int section, Qt::Orientation orientation, int ro
 {
   if (role != Qt::DisplayRole)
     return QVariant();
+  // logger(QString("column %1").arg(section).toStdString().c_str());
   return query->record().value(section);
+}
+
+QList<Column *> QueryModel::columns() const
+{
+  QList<Column *> columns;
+  QSqlRecord record = query->record();
+  for(int i = 0; i < record.count(); ++i)
+  {
+    Column *column = new Column;
+    column->name = record.fieldName(i);
+    column->type = record.value(i).type();
+
+    // logger(QString("column %1: %2").arg(i).arg(column->name).toStdString().c_str());
+    columns.append(column);
+  }
+  return columns;
 }
 

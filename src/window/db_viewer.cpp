@@ -218,4 +218,8 @@ void DbViewer::execute_query(QString query_sql)
 {
   logger("DbViewer::execute_query");
   logger(query_sql.toStdString().c_str());
+  QSqlDatabase db = connection->get_db(current_database->name);
+  QSqlQuery *query = new QSqlQuery(query_sql, db);
+  QueryModel *model = new QueryModel(query);
+  record_view->setModel(model);
 }

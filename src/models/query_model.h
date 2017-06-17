@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QModelIndex>
 
+#include "column.h"
 #include "../utils/logger.h"
 
 class QueryModel : public QAbstractTableModel {
@@ -25,6 +26,8 @@ class QueryModel : public QAbstractTableModel {
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+  QList<Column *> columns() const;
 
   // setData();
   // flags();

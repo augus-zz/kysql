@@ -16,6 +16,7 @@
 #include "./sql_editor.h"
 #include "../models/connection.h"
 #include "../models/database.h"
+#include "../models/query_model.h"
 #include "../utils/logger.h"
 
 class DbViewer: public QWidget {
