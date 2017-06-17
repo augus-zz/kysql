@@ -70,35 +70,6 @@ void MainWindow::show_tab_page(Connection *connection)
     db_viewers.append(w);
     tab_widget->addTab(w, connection->name.isEmpty() ? connection->host : connection->name);
   }
-  // logger("Mainwindow.create_page");
-  // QVBoxLayout *sidebar_layout = new QVBoxLayout;
-  // QTreeWidget *db_tree = new QTreeWidget();
-
-
-  // db_tree->setMinimumWidth(200);
-  // db_tree->setMaximumWidth(300);
-  // sidebar_layout->addWidget(db_tree);
-  // SQLEditor *sql_editor = new SQLEditor();
-
-  // QTableView *table_view = new QTableView();
-  // QStandardItemModel *model = new QStandardItemModel();
-  // model->setColumnCount(2);
-  // model->setHeaderData(0, Qt::Horizontal, QString::fromLocal8Bit("Card NO"));
-  // model->setHeaderData(1, Qt::Horizontal, QString::fromLocal8Bit("Name"));
-  // table_view->setModel(model);
-
-  // QVBoxLayout *query_layout = new QVBoxLayout;
-  // query_layout->addWidget(sql_editor);
-  // query_layout->addWidget(table_view);
-
-  // QHBoxLayout *h_layout = new QHBoxLayout;
-  // h_layout->addLayout(sidebar_layout);
-  // h_layout->addLayout(query_layout);
-
-  // QWidget *page = new QWidget();
-  // page->setLayout(h_layout);
-  // tab_widget->addTab(page, connection == NULL || connection->name.isNull() ?
-  //                   "New Connection" : connection->name);
 }
 
 void MainWindow::create_shortcuts()

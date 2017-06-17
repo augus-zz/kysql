@@ -304,6 +304,9 @@ private slots:
     updateSidebar ( const QRect &rect,
                     int d );
 
+signals:
+  void signal_query(QString);
+
 // Auto upper case keywords ...
 public:
     void

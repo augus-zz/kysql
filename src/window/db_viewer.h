@@ -36,6 +36,7 @@ public slots:
    void db_select(int);
    void tree_item_select(QTreeWidgetItem *, int);
    void table_query(QTreeWidgetItem *, int);
+   void execute_query(QString query_sql);
 
 public:
    void init_db_info();

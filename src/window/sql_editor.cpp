@@ -539,6 +539,8 @@ SQLEditor::SQLEditor ( QWidget *parent ) : QPlainTextEdit( parent ) {
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSidebar()));
     connect(this, SIGNAL(updateRequest(QRect, int)), this, SLOT(updateSidebar(QRect, int)));
 
+    connect(this, SIGNAL(signal_query(QString)), parent, SLOT(execute_query(QString)));
+
     QString doublequoted_string = "\"(?:[^\\\\\"]|\\\\.)*\"";
     QString singlequoted_string = "'(?:[^\\\\']|\\\\.)*'";
     QString c_style_comment = "/\\*(?:[^*]*|\\*[^/])*\\*/";
@@ -1546,6 +1548,7 @@ void
 SQLEditor::executeQuery() {
   logger("SQLEditor::Execute_Query");
   logger(Selected_Text().toStdString().c_str());
+  emit signal_query(Selected_Text());
 }
 
 void

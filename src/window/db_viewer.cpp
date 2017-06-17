@@ -24,7 +24,7 @@ void DbViewer::init()
   sidebar_layout->addWidget(database_cbx);
   sidebar_layout->addWidget(table_view);
 
-  sql_editor = new SQLEditor();
+  sql_editor = new SQLEditor(this);
   record_view = new QTableView();
 
   QVBoxLayout *query_layout = new QVBoxLayout;
@@ -212,4 +212,10 @@ void DbViewer::table_select(QTreeWidgetItem *tree_item, int column)
     tree_item->addChildren(column_items);
     table_view->expandItem(tree_item);
   }
+}
+
+void DbViewer::execute_query(QString query_sql)
+{
+  logger("DbViewer::execute_query");
+  logger(query_sql.toStdString().c_str());
 }
