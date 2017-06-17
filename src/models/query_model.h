@@ -20,14 +20,13 @@ class QueryModel : public QAbstractTableModel {
 
   public:
   QSqlQuery *query;
+  QList<Column> columns;
 
   public:
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-  QList<Column *> columns() const;
 
   // setData();
   // flags();
