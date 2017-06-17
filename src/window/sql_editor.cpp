@@ -3,6 +3,8 @@
 
 #include "sql_editor.h"
 
+#define DEFAULT_FONT_SIZE 12
+
 SQLEditorHighlighter::SQLEditorHighlighter ( QTextDocument *parent ) :
                             QSyntaxHighlighter ( parent ),
                             m_markCaseSensitivity(Qt::CaseInsensitive) {
@@ -592,17 +594,18 @@ SQLEditor::SQLEditor ( QWidget *parent ) : QPlainTextEdit( parent ) {
 
 #if defined(Q_OS_LINUX)
     QFont textFont = font();
-    textFont.setPointSize(14);
+    textFont.setPointSize(DEFAULT_FONT_SIZE);
     textFont.setFamily("ubuntu mono");
     setFont(textFont);
 
 #elif defined(Q_OS_MAC)
     QFont textFont = font();
-    textFont.setPointSize(14);
+    textFont.setPointSize(DEFAULT_FONT_SIZE);
     textFont.setFamily("Courier");
     setFont(textFont);
 #elif defined(Q_OS_UNIX)
     QFont textFont = font();
+    textFont.setPointSize(DEFAULT_FONT_SIZE);
     textFont.setFamily("Monospace");
     setFont(textFont);
 #endif
@@ -1802,7 +1805,7 @@ void
 SQLEditor::resetFontsize( ) {
   logger("sql_editor.resetFontsize");
   QFont textFont = font();
-  textFont.setPointSize(16);
+  textFont.setPointSize(DEFAULT_FONT_SIZE);
   setFont(textFont);
 }
 
