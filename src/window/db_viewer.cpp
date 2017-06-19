@@ -9,7 +9,7 @@ DbViewer::DbViewer(Connection *connection, QWidget *parent):QWidget(parent)
 DbViewer::~DbViewer()
 {
   if(connection)
-  { connection->close(); }
+    connection->close();
 }
 
 void DbViewer::init()
