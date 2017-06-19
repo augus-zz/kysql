@@ -68,7 +68,8 @@ void MainWindow::show_tab_page(Connection *connection)
   {
     DbViewer *w = new DbViewer(connection, this);
     db_viewers.append(w);
-    tab_widget->addTab(w, connection->name.isEmpty() ? connection->host : connection->name);
+    auto idx = tab_widget->addTab(w, connection->name.isEmpty() ? connection->host : connection->name);
+    tab_widget->setCurrentIndex(idx);
   }
 }
 

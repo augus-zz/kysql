@@ -29,6 +29,8 @@ void ConnectionWindow::init()
   txt_connection_username->setPlaceholderText(QString("root"));
   txt_connection_password->setEchoMode(QLineEdit::EchoMode::Password);
 
+  txt_connection_name->setFocusPolicy(Qt::StrongFocus);
+
   QPushButton *btn_save = new QPushButton(tr("&Save"));
   QPushButton *btn_cancel = new QPushButton(tr("&Cancel"));
 
