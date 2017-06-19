@@ -44,7 +44,7 @@ void MainWindow::init()
 
   if(!(qobject_cast<Application *>qApp)->connections.isEmpty())
   {
-    for( auto &connection :( qobject_cast<Application *>qApp)->connections )
+    for( auto &connection : (qobject_cast<Application *>qApp)->connections )
     {
       show_tab_page(connection);
     }
@@ -80,8 +80,7 @@ void MainWindow::create_shortcuts()
 }
 
 void MainWindow::new_connection()
-{
-  logger("new connection");
+{ logger("new connection");
   ConnectionWindow *w = new ConnectionWindow(NULL, this);
 
   tab_widget->addTab(w, "New Connection");
@@ -157,6 +156,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   for(auto &connection: (qobject_cast<Application *>qApp)->connections)
   {
     //save
+    logger("closeEvent");
     (qobject_cast<Application *>qApp)->connections.removeOne(connection);
     delete connection;
   }
