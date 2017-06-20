@@ -18,7 +18,7 @@ DEFINES += QT_MESSAGELOGCONTEXT
 
 # Input
 HEADERS += src/application.h \
-src/untils/logger.h \
+src/utils/logger.h \
 src/models/connection.h \
 src/models/database.h \
 src/models/table.h \

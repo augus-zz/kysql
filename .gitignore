@@ -3,6 +3,6 @@ tmp
 *.swp
 #*
 build/*
-!build/.gitkeep
 Makefile
 .qmake.stash
+test/build/*
