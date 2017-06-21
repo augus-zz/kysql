@@ -6,3 +6,4 @@ build/*
 Makefile
 .qmake.stash
 test/build/*
+test/Makefile

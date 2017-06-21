@@ -16,6 +16,7 @@ void DbViewer::init()
 {
   logger("DbViewer.init");
   QVBoxLayout *sidebar_layout = new QVBoxLayout;
+
   table_view = new QTreeWidget();
   table_view->setMinimumWidth(200);
   table_view->setMaximumWidth(300);
