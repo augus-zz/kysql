@@ -11,8 +11,9 @@ private slots:
 
 void TestApplication::create_application()
 {
-  char *argv[] = {"kysql", "arg1", NULL};
-  Application *app = new Application(1, argv);
+  char *argv[] = {"kysql", "arg1"};
+  Application *app = new Application(2, argv);
+  QTimer::singleShot(3000, &(app->main_window), SLOT(close()));
   app->exec();
 }
 

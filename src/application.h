@@ -13,11 +13,13 @@ class Application : public QApplication
 {
   Q_OBJECT
 
- public:
+public:
   explicit Application(int argc, char ** argv);
 
   ~Application();
   int exec();
+public:
+  MainWindow main_window;
   QList<Connection*> connections;
 };
 

@@ -28,7 +28,6 @@ src/window/main_window.h \
 src/window/sql_editor.h \
 src/window/connection_window.h \
 src/window/db_viewer.h
-src/window/query_view.h \
 
 SOURCES += main.cpp src/application.cpp \
 src/models/connection.cpp \
@@ -40,4 +39,3 @@ src/window/main_window.cpp \
 src/window/sql_editor.cpp \
 src/window/connection_window.cpp \
 src/window/db_viewer.cpp
-src/window/query_view.cpp \
