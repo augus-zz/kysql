@@ -7,3 +7,4 @@ Makefile
 .qmake.stash
 test/build/*
 test/Makefile
+etc/kysql.bin

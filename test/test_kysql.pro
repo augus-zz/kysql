@@ -1,7 +1,7 @@
 QT += core gui sql testlib widgets
 
 TEMPLATE = app
-TARGET = test
+TARGET = test_main
 INCLUDEPATH += .
 
 QMAKE_CXX = clang++
@@ -12,6 +12,9 @@ OBJECTS_DIR = build/objects
 MOC_DIR = build/mocs
 
 DEFINES += QT_DEPRECATED_WARNINGS
+
+INCLUDEPATH += /usr/local/include
+LIBS += -L"/usr/local/lib" -lyaml-cpp
 
 HEADERS += ../src/application.h \
 ../src/utils/logger.h \
@@ -36,5 +39,9 @@ SOURCES += ../src/application.cpp \
 ../src/window/connection_window.cpp \
 ../src/window/db_viewer.cpp
 
+HEADERS += src/test_application.h \
+src/utils/test_configuration.h
 
-SOURCES += src/test_application.cpp
+SOURCES += test_main.cpp\
+src/test_application.cpp \
+src/utils/test_configuration.cpp
