@@ -16,6 +16,9 @@ QMAKE_CXXFLAGS += -std=c++14
 
 DEFINES += QT_MESSAGELOGCONTEXT
 
+INCLUDEPATH += /usr/local/include/
+LIBS += -L"/usr/local/lib" -lyaml-cpp
+
 # Input
 HEADERS += src/application.h \
 src/utils/logger.h \
