@@ -43,9 +43,11 @@ SOURCES += ../src/application.cpp \
 ../src/window/db_viewer.cpp
 
 HEADERS += src/test_application.h \
-src/utils/test_configuration.h
+src/utils/test_configuration.h \
+src/utils/test_connection_manager.h
 
 SOURCES += test_main.cpp\
 src/test_application.cpp \
-src/utils/test_configuration.cpp
+src/utils/test_configuration.cpp \
+src/utils/test_connection_manager.cpp
 

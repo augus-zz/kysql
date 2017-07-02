@@ -4,6 +4,6 @@
 class ConnectionManager
 {
 
-}
+};
 
 #endif // CONNECTION_MANAGER_H
