@@ -16,8 +16,6 @@ void TestConfiguration::test_load()
   config->config_path = FIXTRUES_PATH;
   config->config_filename = "config.yml";
 
-  logger(config->config_path.toStdString().c_str());
-  logger(config->config_filename.toStdString().c_str());
   QVERIFY(true == config->load());
 
   delete config;

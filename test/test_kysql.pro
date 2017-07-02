@@ -14,7 +14,7 @@ MOC_DIR = build/mocs
 DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += /usr/local/include
-LIBS += -L"/usr/local/lib" -lyaml-cpp
+LIBS += -L"/usr/local/lib" -lyaml-cpp -lgtest
 
 HEADERS += ../src/application.h \
 ../src/utils/logger.h \
@@ -48,3 +48,4 @@ src/utils/test_configuration.h
 SOURCES += test_main.cpp\
 src/test_application.cpp \
 src/utils/test_configuration.cpp
+
