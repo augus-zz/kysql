@@ -43,7 +43,7 @@ bool Connection::close()
 void Connection::init_db()
 {
   QStringList drivers = QSqlDatabase::drivers();
-  logger(drivers.join(",").toStdString().c_str());
+  logger(kstr(drivers.join(",")));
 
   db = QSqlDatabase::addDatabase(db_type);
   db.setHostName(host);
@@ -84,7 +84,7 @@ QStringList Connection::get_database_names()
 
 QList<Table *> Connection::get_database_tables(QString db_name)
 {
-  logger(QString("Connection.get_database_tables, db: %1").arg(db_name).toStdString().c_str());
+  logger(kstr(QString("Connection.get_database_tables, db: %1").arg(db_name)));
   QSqlDatabase session_db;
   if(QSqlDatabase::contains(db_name))
   {
@@ -113,7 +113,7 @@ QList<Table *> Connection::get_database_tables(QString db_name)
 
 void Connection::get_table_details(QString db_name, Table *table)
 {
-  logger(QString("connection.get_table_details, db_name: %1, table_name: %2").arg(db_name).arg(table->name).toStdString().c_str());
+  logger(kstr(QString("connection.get_table_details, db_name: %1, table_name: %2").arg(db_name).arg(table->name)));
   QSqlDatabase session_db;
   if(QSqlDatabase::contains(db_name))
   {
@@ -150,10 +150,10 @@ QSqlQuery *Connection::new_query()
 
 void Connection::log()
 {
-  logger(QString("<Connection, name: %1, host: %2, port: %3, username: %4, password: %5>")
+  logger(kstr(QString("<Connection, name: %1, host: %2, port: %3, username: %4, password: %5>")
          .arg(name)
          .arg(host)
          .arg(port)
          .arg(username)
-         .arg(password).toStdString().c_str());
+         .arg(password)));
 }

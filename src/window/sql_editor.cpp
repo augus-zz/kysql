@@ -800,7 +800,7 @@ SQLEditor::Compute_Current_Paren_Indent ( QString Current_Text,
 
 void
 SQLEditor::keyPressEvent ( QKeyEvent* event ) {
-    logger(QString("key: %1").arg(event->key()).toStdString().c_str());
+    logger(kstr(QString("key: %1").arg(event->key())));
     static QString part_of_word("abcdefghijklmnopqrstuvwxyz_0123456789");
     static QString end_of_word("~!@#$%^&*()_+{}|:\"<>?,./;'[]\\-=");
 
@@ -1550,7 +1550,7 @@ SQLEditor::Simple_Format_SQL ( ) {
 void
 SQLEditor::executeQuery() {
   logger("SQLEditor::Execute_Query");
-  logger(Selected_Text().toStdString().c_str());
+  logger(kstr(Selected_Text()));
   emit signal_query(Selected_Text());
 }
 

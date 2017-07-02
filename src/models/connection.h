@@ -7,6 +7,7 @@
 #include <QSqlError>
 
 #include "../utils/logger.h"
+#include "../utils/kstring.h"
 #include "database.h"
 #include "table.h"
 #include "column.h"

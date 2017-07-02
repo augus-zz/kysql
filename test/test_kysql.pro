@@ -19,6 +19,7 @@ LIBS += -L"/usr/local/lib" -lyaml-cpp -lgtest
 HEADERS += ../src/application.h \
 ../src/utils/logger.h \
 ../src/utils/path.h \
+../src/utils/kstring.h \
 ../src/utils/configuration.h \
 ../src/models/connection.h \
 ../src/models/database.h \

@@ -85,7 +85,7 @@ void DbViewer::init_table_tree()
   {
     QTreeWidgetItem *item = new QTreeWidgetItem((QTreeWidget*)0, QStringList(QString(table->name)));
     table_items.append(item);
-    logger(QString("db_viewer.init_db_tree, table_name: %1").arg(table->name).toStdString().c_str());
+    logger(kstr(QString("db_viewer.init_db_tree, table_name: %1").arg(table->name)));
   }
   connect(table_view, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(tree_item_select(QTreeWidgetItem *, int)));
   connect(table_view, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(table_query(QTreeWidgetItem *, int)));
@@ -96,7 +96,7 @@ bool DbViewer::get_all_db()
 {
   logger("DbViewer.get_all_db");
   QStringList db_names = connection->get_database_names();
-  logger(db_names.join(",").toStdString().c_str());
+  logger(kstr(db_names.join(",")));
   for(auto &name : db_names)
   {
     Database *db = new Database;
@@ -121,7 +121,7 @@ void DbViewer::db_select(int idx)
 
 void DbViewer::tree_item_select(QTreeWidgetItem *tree_item, int column)
 {
-  logger(QString("tree_item selected, name: %1").arg(tree_item->text(0)).toStdString().c_str());
+  logger(kstr(QString("tree_item selected, name: %1").arg(tree_item->text(0))));
   QTreeWidgetItem *parent = tree_item->parent();
   if(NULL == parent)
   {
@@ -159,7 +159,7 @@ void DbViewer::tree_item_select(QTreeWidgetItem *tree_item, int column)
 
 void DbViewer::table_query(QTreeWidgetItem *tree_item, int column)
 {
-  logger(QString("DbViewer.table_query, name: %1").arg(tree_item->text(0)).toStdString().c_str());
+  logger(kstr(QString("DbViewer.table_query, name: %1").arg(tree_item->text(0))));
   QTreeWidgetItem *parent = tree_item->parent();
   if(NULL == parent)
   {
@@ -171,7 +171,7 @@ void DbViewer::table_query(QTreeWidgetItem *tree_item, int column)
 
 void DbViewer::query(QString table_name)
 {
-  logger(QString("DbViewer.query, db: %1, name: %2").arg(current_database->name).arg(table_name).toStdString().c_str());
+  logger(kstr(QString("DbViewer.query, db: %1, name: %2").arg(current_database->name).arg(table_name)));
   QSqlDatabase db = connection->get_db(current_database->name);
   QSqlTableModel *model = new QSqlTableModel(this, connection->get_db(current_database->name));
   model->setTable(table_name);
@@ -184,7 +184,7 @@ void DbViewer::query(QString table_name)
   int column_count = 0;
   for(auto &column : table.columns)
   {
-    model->setHeaderData(column_count++, Qt::Horizontal, QObject::tr(column->name.toStdString().c_str()));
+    model->setHeaderData(column_count++, Qt::Horizontal, QObject::tr(kstr(column->name)));
   }
   record_view->setModel(model);
 }
@@ -218,7 +218,7 @@ void DbViewer::table_select(QTreeWidgetItem *tree_item, int column)
 void DbViewer::execute_query(QString query_sql)
 {
   logger("DbViewer::execute_query");
-  logger(query_sql.toStdString().c_str());
+  logger(kstr(query_sql));
   QSqlDatabase db = connection->get_db(current_database->name);
   QSqlQuery *query = new QSqlQuery(query_sql, db);
   QueryModel *model = new QueryModel(query);

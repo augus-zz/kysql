@@ -17,6 +17,7 @@
 #include <QKeySequence>
 
 #include "../utils/logger.h"
+#include "../utils/kstring.h"
 
 class SQLEditor;
 class SQLEditorSidebar;

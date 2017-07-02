@@ -4,9 +4,15 @@
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
+#include <iostream>
+#include <fstream>
+
 #include <yaml-cpp/yaml.h>
 #include "logger.h"
 #include "path.h"
+#include "kstring.h"
+
+using namespace std;
 
 class Configuration
 {
@@ -22,6 +28,7 @@ public:
   QList<QString> search_config();
   bool save();
   bool load();
+  bool is_exist(QString key);
 
   QString get_string(QString key, QString v = "");
   int get_int(QString key, int v = 0);
@@ -29,15 +36,20 @@ public:
   QDate get_date(QString key, QDate v = QDate::currentDate());
   QTime get_time(QString key, QTime v = QTime::currentTime());
   QDateTime get_datetime(QString key, QDateTime v = QDateTime::currentDateTime());
+  QList<int> get_int_list(QString key, QList<int> v = QList<int>());
+  QList<QString> get_string_list(QString key, QList<QString> v = QList<QString>());
 
 protected:
   Configuration(){}
 
 private:
   static Configuration *inst;
+  YAML::Node config;
 
 private:
-  YAML::Node config;
+  QStringList split_key(QString key);
+  bool key_exist(YAML::Node node, QStringList keys);
+  YAML::Node key_get(YAML::Node node, QStringList keys);
 };
 
 #endif // CONFIGURATION_H

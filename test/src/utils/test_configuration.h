@@ -15,6 +15,13 @@ private slots:
 private slots:
   void test_load();
   void test_save();
+  void test_not_exist();
+  void test_get_int();
+  void test_get_string();
+
+private:
+  // helper methods
+  Configuration* init_config();
 };
 
 #endif // TEST_CONFIGURATION_H

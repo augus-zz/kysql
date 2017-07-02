@@ -18,6 +18,7 @@
 #include "../models/database.h"
 #include "../models/query_model.h"
 #include "../utils/logger.h"
+#include "../utils/kstring.h"
 
 class DbViewer: public QWidget {
   Q_OBJECT

@@ -9,8 +9,8 @@ QueryModel::QueryModel(QSqlQuery *query, QObject *parent) : QAbstractTableModel(
   {
     Column column;
     column.name = record.fieldName(i);
-    // logger(QString("column %1: %2").arg(i).arg(column.name).toStdString().c_str());
-    columns.append(std::move(column));
+    // logger(kstr(QString("column %1: %2").arg(i).arg(column.name)));
+    columns.append(column);
   }
 }
 

@@ -10,6 +10,7 @@
 
 #include "column.h"
 #include "../utils/logger.h"
+#include "../utils/kstring.h"
 
 class QueryModel : public QAbstractTableModel {
   Q_OBJECT
