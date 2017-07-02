@@ -22,6 +22,8 @@ LIBS += -L"/usr/local/lib" -lyaml-cpp
 # Input
 HEADERS += src/application.h \
 src/utils/logger.h \
+src/utils/path.h \
+src/utils/configuration.h \
 src/models/connection.h \
 src/models/database.h \
 src/models/table.h \
@@ -33,6 +35,7 @@ src/window/connection_window.h \
 src/window/db_viewer.h
 
 SOURCES += main.cpp src/application.cpp \
+src/utils/configuration.cpp \
 src/models/connection.cpp \
 src/models/database.cpp \
 src/models/table.cpp \

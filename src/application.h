@@ -18,6 +18,11 @@ public:
 
   ~Application();
   int exec();
+
+public:
+  QString config_path;
+  QString config_filename;
+
 public:
   MainWindow main_window;
   QList<Connection*> connections;

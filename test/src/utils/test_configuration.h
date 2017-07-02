@@ -1,7 +1,7 @@
 #ifndef TEST_CONFIGURATION_H
 #define TEST_CONFIGURATION_H
 
-#include <QtTest/QtTest>
+#include "../../test_helper.h"
 
 #include "../src/utils/configuration.h"
 
@@ -13,7 +13,8 @@ private slots:
   void cleanupTestCase();
 
 private slots:
-  void create_configuration();
+  void test_load();
+  void test_save();
 };
 
 #endif // TEST_CONFIGURATION_H
