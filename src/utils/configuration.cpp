@@ -23,14 +23,14 @@ bool Configuration::save()
 
 bool Configuration::load()
 {
-  logger(kstr(path_join(config_path, config_filename)));
+  // logger(kstr(path_join(config_path, config_filename)));
   config = YAML::LoadFile(kstr(path_join(config_path, config_filename)));
   return true;
 }
 
 QStringList Configuration::split_key(QString key)
 {
-  return key.split(".");
+  return key.split(".", QString::SkipEmptyParts);
 }
 
 bool Configuration::is_exist(QString key)
@@ -40,12 +40,13 @@ bool Configuration::is_exist(QString key)
 
 bool Configuration::key_exist(YAML::Node node, QStringList keys)
 {
-  return key_get(node, keys).IsNull();
+  return !key_get(node, keys).IsNull();
 }
 
 YAML::Node Configuration::key_get(YAML::Node node, QStringList keys)
 {
-  YAML::Node _node;
+  // logger(kstr(keys.join(",")));
+  static YAML::Node _node;
   if(node.IsNull() || !node.IsMap() || keys.empty())
     return _node;
 

@@ -42,11 +42,11 @@ public:
 protected:
   Configuration(){}
 
-private:
+public:
   static Configuration *inst;
   YAML::Node config;
 
-private:
+public:
   QStringList split_key(QString key);
   bool key_exist(YAML::Node node, QStringList keys);
   YAML::Node key_get(YAML::Node node, QStringList keys);

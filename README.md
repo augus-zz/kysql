@@ -2,7 +2,7 @@
 
 ### build
 ```shell
-qmake -project
+qmake
 make
 ./build/kysql
 ```

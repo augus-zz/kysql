@@ -1,7 +1,8 @@
 test_int: 1
-test_string: testo
+test_string: test
 test_datetime: 2017-07-01 10:20:30
 test_date: 2017-07-01
 test_time: 12:30:59
 test_nested:
   test_int: 0
+  test_string: test

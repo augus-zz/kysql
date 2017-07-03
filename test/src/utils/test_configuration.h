@@ -15,7 +15,10 @@ private slots:
 private slots:
   void test_load();
   void test_save();
-  void test_not_exist();
+  void test_split_key();
+  void test_is_exist();
+  void test_key_exist();
+  void test_key_get();
   void test_get_int();
   void test_get_string();
 
